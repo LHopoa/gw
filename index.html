@@ -1,250 +1,1095 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <!--网站收录数据抓取-->
     <meta charset="UTF-8">
-    <meta name="language" content="zh-CN">
-    <meta name="title" content="">
-    <meta name="author" content="-免费发布">
-    <meta name="description" content="，免费资源分享！">
-    <meta name="keywords" content=",资源下载">
-    <meta name="robots" content="All">
-    <!--数据抓取完成-->
-    <title> 爱 </title>
-    <!-- 调用ICON地址 -->
-    <link rel="icon" href="cnm.sb.ico">
-    <!-- 自适应 -->
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!-- Css样式调用 -->
-    <link rel="stylesheet" type="text/css" href="cnm.sb_load.css" />
-    <link rel="stylesheet" type="text/css" href="cnm.sb_bg.css" />
-    <link rel="stylesheet" type="text/css" href="cnm.sb_pc.css" />
-    <link rel="stylesheet" type="text/css" href="cnm.sb_mp.css" />
-    <!-- Javascript样式调用 -->
-    <script src="jquery-3.2.1.min.js"></script>
-    <script src="cnm.sb_judge.js"></script>
-    <script src="cnm.sb_pc.js"></script>
-    <script src="cnm.sb_mp.js"></script>
-    <script src="cnm.sb_copy.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RE游戏中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
 
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ER代码验证界面 - 隐藏验证代码 */
+        .er-code-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .er-code-content {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .er-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ff4757;
+        }
+
+        .er-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .er-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+
+        .er-code-display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .er-code-display h3 {
+            font-size: 1.8rem;
+            color: #ffdd59;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .er-code-display p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .er-input-container {
+            margin-bottom: 25px;
+        }
+
+        .er-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: 2px solid #444;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+        }
+
+        .er-input:focus {
+            outline: none;
+            border-color: #ff4757;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .er-submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .er-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        .er-error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            grid-template-rows: auto auto;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        /* 修改图标颜色为黑色 */
+        .card-header i {
+            font-size: 1.5rem;
+            margin-right: 12px;
+            color: #333; /* 改为黑色 */
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* 个人区 */
+        .personal-area {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+            justify-content: center;
+        }
+
+        /* 完整显示QQ头像 */
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333 0%, #666 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 4px solid #fff;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #333; /* 改为黑色 */
+        }
+
+        .profile p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .developer-info {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .developer-info h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .qq-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .qq-icon {
+            background: #12b7f5;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .qq-number {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .qq-number:hover {
+            color: #12b7f5;
+            text-decoration: underline;
+        }
+
+        .personal-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .personal-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            color: #333; /* 改为黑色 */
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .personal-links a:hover {
+            background: #333; /* 改为黑色 */
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* 游戏区 */
+        .games-area {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-card:hover {
+            background: #f0f0f0;
+            transform: translateY(-5px);
+        }
+
+        /* 修改游戏图标颜色为黑色 */
+        .game-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #333; /* 改为黑色 */
+        }
+
+        .game-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .game-card p {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .game-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+        }
+
+        /* 额外跳转卡片 */
+        .extra-card {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            color: white;
+        }
+
+        .extra-card .game-icon {
+            color: white;
+        }
+
+        .extra-card h4 {
+            color: white;
+        }
+
+        .extra-card p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .extra-card .game-tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* 精选区 */
+        .featured-area {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .featured-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 1.1rem;
+            flex-direction: column;
+        }
+
+        /* 修改占位图标颜色为黑色 */
+        .featured-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #333; /* 改为黑色 */
+        }
+
+        /* 发现区 */
+        .discovery-area {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .discovery-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 1.1rem;
+            flex-direction: column;
+        }
+
+        /* 修改占位图标颜色为黑色 */
+        .discovery-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #333; /* 改为黑色 */
+        }
+
+        /* 加载弹窗 */
+        .loading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .loading-content {
+            background: #1e1e1e;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #333; /* 改为黑色系 */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #333; /* 改为黑色 */
+        }
+
+        .loading-content p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .qswe-protection {
+            color: #333; /* 改为黑色 */
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+
+        /* 暗色模式切换 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        .dark-theme {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+
+        .dark-theme .card {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            border-color: #333;
+        }
+
+        .dark-theme .game-card {
+            background-color: #2a2a2a;
+            border-color: #333;
+        }
+
+        .dark-theme .personal-links a {
+            background-color: #333;
+            color: #ddd;
+        }
+
+        .dark-theme .game-tag {
+            background-color: #333;
+            color: #ddd;
+        }
+
+        .dark-theme .featured-placeholder,
+        .dark-theme .discovery-placeholder {
+            color: #aaa;
+        }
+
+        .dark-theme .card-header h2 {
+            color: #f0f0f0;
+        }
+
+        .dark-theme .card-header i {
+            color: #f0f0f0; /* 暗色模式下图标改为白色 */
+        }
+
+        .dark-theme .game-icon {
+            color: #f0f0f0; /* 暗色模式下图标改为白色 */
+        }
+
+        .dark-theme .game-card h4 {
+            color: #f0f0f0;
+        }
+
+        .dark-theme .developer-info {
+            background: #2a2a2a;
+        }
+
+        .dark-theme .developer-info h4 {
+            color: #f0f0f0;
+        }
+
+        .dark-theme .qq-number {
+            color: #f0f0f0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1100px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+            }
+
+            .personal-area {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .games-area {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .featured-area {
+                grid-column: 1;
+                grid-row: 3;
+            }
+
+            .discovery-area {
+                grid-column: 1;
+                grid-row: 4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .er-code-content {
+                padding: 30px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+    </style>
 </head>
-
 <body>
-
-
-    <!-- 手机MP端 -->
-    <div id="mp">
-        <div id="excontent">
-            <!-- NO1-首页内容 -->
-            <div id="exnav01">
-                <div class="exn1_top">
-                    <img src="1.png" />
-                    <span>2024</span>
-                    <!-- <a href="" target="_blank" rel="noopener noreferrer">官网</a> -->
-                </div>
-                <div class="exn1_banner">
-                    <h3>欢迎来到</h3>
-                    <p>陵寒个人团队官方页面~</p>
-                    <p>2024新年快乐 </p>
-                </div>
-                <ul class="exn1_but">
-                    <li id="exn1_01">
-                        <div><img src="cnmsb01.png" /></div>
-                        <h5>官网首页</h5>
-                        <p>当前页面-<span class="red">s</span>首页！</p>
-                    </li>
-                    <li id="exn1_02">
-                        <div><img src="cnmsb02.png" /></div>
-                        <h5>关于本站</h5>
-                        <p>关于本站的一些记录</p>
-                    </li>
-                    <li id="exn1_03">
-                        <div><img src="cnmsb03.png" /></div>
-                        <h5>工作团队</h5>  
-                    </li>
-                    <li id="exn1_04">
-                        <div><img src="cnmsb04.png" /></div>
-                        <h5>商业合作</h5>
-                        <p>想找我们合作?来吧！</p>
-                    </li>
-                    <li id="exn1_05">
-                        <div><img src="cnmsb05.png" /></div>
-                        <h5>官方站点</h5>
-                        <p>包括博客与活动等网址</p>
-                    </li>
-                </ul>
+    <!-- ER代码验证界面 - 不显示验证代码 -->
+    <div class="er-code-modal" id="erCodeModal">
+        <div class="er-code-content">
+            <div class="er-logo">
+                <i class="fas fa-gamepad"></i>
             </div>
-            <!-- NO2-关于本站 -->
-            <div id="exnav02">
-                <div class="exn02_bg">
-                    <p>关于本站</p>
-                </div>
-                <div class="exn02_kj exmb03">
-                    <h3 class="exn_bt">支/持/技/术</h3>
-                    <p>已公开</p>
-                    <div>
-                        <img src="1.png" />
-                        <span>新利app</span>
-                        <span>分享网赚</span>
-                    </div>
-                    <div>
-                        <img src="1.png" />
-                        <span>LHxxxcr</span>
-                        <span>创始人</span>
-                    </div>
-                    <div>
-                        <img src="1.png" />
-                        <span>陵寒</span>
-                        <span>团队负责人</span>
-                    </div>
-                    <div>
-                        <img src="1.png" />
-                        <span>于纤</span>
-                        <span>项目负责人</span>
-                    </div>
-                    <div>
-                        <img src="1.png" />
-                        <span>人机</span>
-                        <span>史</span>
-                    </div>
-
-                    <p>精通掌握的技能</p>
-                    <div>
-                        <img src="1.png" />
-                        <span>Html,css</span>
-                        <span>只有1年</span>
-                    </div>
-                    <div>
-                        <img src="1.png" />
-                        <span>裕,易</span>
-                        <span>同uniapp</span>
-                    </div>
-                </div>
-
-                <!-- 每日必做 -->
-                <div class="exn02_kj exmb04">
-                    <h3 class="exn_bt">临/时/通/告</h3>
-                    <div id="exjn">
-                        <a href="javascript:;">这里没什么好看的</a>
-                        <a href="javascript:;">划水划水，划水划水，划水划水，划水划水，划水划水，划水划水</a>
-                        <a href="javascript:;">闲聊闲聊，闲聊闲聊，闲聊闲聊，闲聊闲聊，闲聊闲聊，闲聊闲聊</a>
-                        <a href="javascript:;">abcdefghigklmnopqrstuvwxyz</a>
-                        <a href="javascript:;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</a>
-                    </div>
-                </div>
-                <!-- 到底了-提示 -->
-                <p class="exbpx">--- 暂时先展示这么多啦 ---</p>
+            <h1 class="er-title">RE游戏中心</h1>
+            <p class="er-subtitle">请输入ER访问代码进入游戏中心</p>
+            
+            <div class="er-code-display">
+                <h3>******.***</h3>
+                <p>验证代码已隐藏，请根据您的权限输入正确的ER代码</p>
             </div>
-            <!-- NO3-团队 -->
-            <div id="exnav03">
-                <div class="exnav03_p">
-                    <h3>陵寒<span>网络工作室</span></h3>
-                    <h5>划水摸鱼，闲无止境~</h5>
-                    <p>2022-2024</p>
-                    <p>我们是黑暗中照亮书本的明灯，光明下抒写思绪的墨笔。</p>
-                </div>
-                <div class="exnav03_team">
-                    <img src="cnmteam01.png" alt="[组织者]" />
-                    <img src="cnmteam02.png" alt="[组织者]" />
-                    <img src="cnmteam03.png" alt="[组织者]" />
-                    <img src="cnmteam04.png" alt="[组织者]" />
-                    <img src="cnmteam05.png" alt="[组织者]" />
-                </div>
+            
+            <div class="er-input-container">
+                <input type="password" class="er-input" id="erInput" placeholder="请输入ER代码" maxlength="12">
             </div>
-            <!-- NO4-商业合作 -->
-            <div id="exnav04">
-                <div class="exnav04_zsc">
-                    <div>
-                        <p>商业合作 - </p>
-                        <img src="qywx.png" alt="[联系二维码]" title="[联系二维码]">
-                    </div>
-                    <p>即使夜深人静，我们依然在努力！</p>
-                </div>
-            </div>
-            <!-- NO5-站点展示 -->
-            <div id="exnav05">
-                <div class="exn5_bg">
-                    <div class="exn5_bg_nav">
-                        <img src="1.png" />
-                        <span>站点展示</span>
-                    </div>
-                </div>
-                <!-- 第五页-内容区域 -->
-                <div class="exn5_nr">
-                    <div class="exnav05_centent_tit">
-                        <h2>官方站点</h2>
-                        <p>注:如果官方站点无法进入了会跳转说明原因</p>
-                    </div>
-                    <!-- 作品展示模板NO1 -->
-                    <div class="exnav05_centent_mb">
-                        <h2>官方站点</h2>
-                        <a href="https://lhopoa.github.io/Yxiaoli/#" target="_blank" rel="noopener noreferrer">
-                            <div><img src="t.png" alt="[]" /></div>
-                            <h3>陵寒博客</h3>
-                            <p>唯一个人联系方式</p>
-                        </a>
-                        <div>立即前往</div>
-                    </div>
-                    <!-- 作品展示模板NO2 -->
-                    <div class="exnav05_centent_mb">
-                        <a href="http://#/" target="_blank" rel="noopener noreferrer">
-                            <div><img src="nav05_zp02.jpg" alt="[]" /></div>
-                            <h3>领函云谈网页版</h3>
-                            <p>视频网站</p>
-                        </a>
-                        <div>立即前往</div>
-                    </div>
-                    <!-- 作品展示模板NO3 -->
-                    <div class="exnav05_centent_mb">
-                        <a href="http://#" target="_blank" rel="noopener noreferrer">
-                            <div><img src="nav05_zp03.jpg" alt="[]" /></div>
-                            <h3>领函云箱app</h3>
-                            <p>软件下载</p>
-                        </a>
-                        <div>立即前往</div>
-                    </div>
-                    <!-- 作品展示模板NO4 -->
-                    <div class="exnav05_centent_mb">
-                        <a href="http://#" target="_blank" rel="noopener noreferrer">
-                            <div><img src="nav05_zp04.jpg" alt="[]" /></div>
-                            <h3>更新</h3>
-                            <p>646464</p>
-                        </a>
-                        <div>434364</div>
-                    </div>
-
-   
-                <p class="exnav05_footer">你有酷酷或者实用的站点推荐嘛？~</p>
+            
+            <button class="er-submit-btn" id="erSubmitBtn">进入游戏中心</button>
+            
+            <div class="er-error" id="erError">
+                代码错误，请重新输入！
             </div>
         </div>
-        <!-- 页面截止 -->
-        <!-- 导航区域 -->
-        <ul id="exnav">
-            <li><img src="cnmsb01.png" />
-                <p>首页</p>
-            </li>
-            <li><img src="cnmsb02.png" />
-                <p>关于本站</p>
-            </li>
-            <li><img src="cnmsb03.png" />
-                <p>团队</p>
-            </li>
-            <li><img src="cnmsb04.png" />
-                <p>商业合作</p>
-            </li>
-            <li><img src="cnmsb05.png" />
-                <p>站点展示</p>
-            </li>
-        </ul>
-        <!-- 背景飘落 -->
-        <div id="xuna"></div>
-        <script src="cnm.sb_bg.js"></script>
     </div>
 
-    <p id="eixp">该网站正在准备测试中！          cshshshsbsbnjsjsjxnxk.ksnsnssnskjsnsn                             index.html </p>
+    <!-- 加载弹窗 -->
+    <div class="loading-modal" id="loadingModal">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>正在进入游戏...</h3>
+            <p>独家防护Qswe加载中，请稍后</p>
+            <p>我们正在为您建立安全连接</p>
+            <div class="qswe-protection">Qswe防护系统激活中</div>
+        </div>
+    </div>
 
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
+        <main class="main-grid">
+            <!-- 个人区 -->
+            <section class="card personal-area">
+                <div class="card-header">
+                    <i class="fas fa-gamepad"></i>
+                    <h2>RE游戏中心</h2>
+                </div>
+                <div class="profile">
+                    <div class="avatar">
+                        <!-- 使用多个QQ头像API源以确保完整显示 -->
+                        <img src="https://q1.qlogo.cn/g?b=qq&nk=2359211086&s=640" 
+                             alt="开发者头像" 
+                             id="qqAvatar"
+                             onerror="this.onerror=null; this.src='https://q.qlogo.cn/g?b=qq&nk=2359211086&s=640'">
+                    </div>
+                    <h3>RE游戏中心</h3>
+                    <p>专业网页游戏导航平台</p>
+                    
+                    <!-- 开发者信息 -->
+                    <div class="developer-info">
+                        <h4>开发者信息</h4>
+                        <div class="qq-info">
+                            <div class="qq-icon">
+                                <i class="fab fa-qq"></i>
+                            </div>
+                            <a class="qq-number" href="http://wpa.qq.com/msgrd?v=3&uin=2359211086&site=qq&menu=yes" target="_blank">2359211086</a>
+                        </div>
+                    </div>
+                    
+                    <div class="personal-links">
+                        <a href="#" title="首页"><i class="fas fa-home"></i></a>
+                        <a href="#" title="游戏库"><i class="fas fa-gamepad"></i></a>
+                        <a href="#" title="社区"><i class="fas fa-users"></i></a>
+                        <a href="#" title="设置"><i class="fas fa-cog"></i></a>
+                        <a href="#" title="帮助"><i class="fas fa-question-circle"></i></a>
+                        <a href="#" title="联系"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 游戏区 -->
+            <section class="card games-area">
+                <div class="card-header">
+                    <i class="fas fa-dice"></i>
+                    <h2>网页游戏</h2>
+                </div>
+                <div class="games-grid">
+                    <!-- CS1.6 游戏 -->
+                    <div class="game-card" data-url="https://webcs.xyz/" data-name="CS1.6">
+                        <div class="game-icon"><i class="fas fa-crosshairs"></i></div>
+                        <h4>CS1.6 在线版</h4>
+                        <p>经典反恐精英1.6在线对战，无需下载，直接开玩！</p>
+                        <div class="game-tags">
+                            <span class="game-tag">射击</span>
+                            <span class="game-tag">竞技</span>
+                            <span class="game-tag">经典</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://play-cs.com/" data-name="CS1.6 第二版">
+                        <div class="game-icon"><i class="fas fa-gun"></i></div>
+                        <h4>CS1.6 第二版</h4>
+                        <p>另一个高质量的CS1.6网页版，稳定流畅，支持多种模式</p>
+                        <div class="game-tags">
+                            <span class="game-tag">射击</span>
+                            <span class="game-tag">多人</span>
+                            <span class="game-tag">怀旧</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 额外跳转卡片 -->
+                    <div class="game-card extra-card" data-url="1.html" data-name="额外页面">
+                        <div class="game-icon"><i class="fas fa-external-link-alt"></i></div>
+                        <h4>额外页面</h4>
+                        <p>跳转到额外的游戏页面，发现更多精彩内容</p>
+                        <div class="game-tags">
+                            <span class="game-tag">跳转</span>
+                            <span class="game-tag">额外</span>
+                            <span class="game-tag">新内容</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 其他网页游戏 -->
+                    <div class="game-card" data-url="https://slither.io" data-name="贪吃蛇大作战">
+                        <div class="game-icon"><i class="fas fa-snake"></i></div>
+                        <h4>贪吃蛇大作战</h4>
+                        <p>控制蛇吃掉光点变长，避免撞到其他玩家，成为最长的蛇！</p>
+                        <div class="game-tags">
+                            <span class="game-tag">休闲</span>
+                            <span class="game-tag">多人</span>
+                            <span class="game-tag">竞技</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://krunker.io" data-name="Krunker.io">
+                        <div class="game-icon"><i class="fas fa-running"></i></div>
+                        <h4>Krunker.io</h4>
+                        <p>快节奏的像素风格第一人称射击游戏，支持多人对战</p>
+                        <div class="game-tags">
+                            <span class="game-tag">射击</span>
+                            <span class="game-tag">像素风</span>
+                            <span class="game-tag">多人</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://surviv.io" data-name="Surviv.io">
+                        <div class="game-icon"><i class="fas fa-skull-crossbones"></i></div>
+                        <h4>Surviv.io</h4>
+                        <p>2D大逃杀游戏，收集武器和装备，成为最后的幸存者</p>
+                        <div class="game-tags">
+                            <span class="game-tag">大逃杀</span>
+                            <span class="game-tag">生存</span>
+                            <span class="game-tag">竞技</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://shellshock.io" data-name="Shell Shockers">
+                        <div class="game-icon"><i class="fas fa-egg"></i></div>
+                        <h4>Shell Shockers</h4>
+                        <p>鸡蛋主题的第一人称射击游戏，有趣的鸡蛋角色和武器</p>
+                        <div class="game-tags">
+                            <span class="game-tag">射击</span>
+                            <span class="game-tag">搞笑</span>
+                            <span class="game-tag">多人</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://skribbl.io" data-name="Skribbl.io">
+                        <div class="game-icon"><i class="fas fa-paint-brush"></i></div>
+                        <h4>Skribbl.io</h4>
+                        <p>你画我猜在线游戏，与全球玩家一起享受绘画乐趣</p>
+                        <div class="game-tags">
+                            <span class="game-tag">绘画</span>
+                            <span class="game-tag">猜词</span>
+                            <span class="game-tag">社交</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://zombs.io" data-name="Zombs.io">
+                        <div class="game-icon"><i class="fas fa-ghost"></i></div>
+                        <h4>Zombs.io</h4>
+                        <p>僵尸生存游戏，白天收集资源，晚上抵御僵尸进攻</p>
+                        <div class="game-tags">
+                            <span class="game-tag">生存</span>
+                            <span class="game-tag">僵尸</span>
+                            <span class="game-tag">策略</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://diep.io" data-name="Diep.io">
+                        <div class="game-icon"><i class="fas fa-shapes"></i></div>
+                        <h4>Diep.io</h4>
+                        <p>控制坦克射击并升级，击败其他玩家，成为最强大的坦克</p>
+                        <div class="game-tags">
+                            <span class="game-tag">坦克</span>
+                            <span class="game-tag">射击</span>
+                            <span class="game-tag">升级</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://mope.io" data-name="Mope.io">
+                        <div class="game-icon"><i class="fas fa-paw"></i></div>
+                        <h4>Mope.io</h4>
+                        <p>动物进化游戏，从弱小动物开始，通过吃食物不断进化</p>
+                        <div class="game-tags">
+                            <span class="game-tag">动物</span>
+                            <span class="game-tag">进化</span>
+                            <span class="game-tag">生存</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://1v1.lol" data-name="1v1.LOL">
+                        <div class="game-icon"><i class="fas fa-user-friends"></i></div>
+                        <h4>1v1.LOL</h4>
+                        <p>1对1射击对战游戏，类似Fortnite的建造和射击机制</p>
+                        <div class="game-tags">
+                            <span class="game-tag">对战</span>
+                            <span class="game-tag">建造</span>
+                            <span class="game-tag">射击</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card" data-url="https://paper.io" data-name="Paper.io">
+                        <div class="game-icon"><i class="fas fa-square"></i></div>
+                        <h4>Paper.io</h4>
+                        <p>占领领土的游戏，控制你的纸片移动，圈地占领更多区域</p>
+                        <div class="game-tags">
+                            <span class="game-tag">休闲</span>
+                            <span class="game-tag">策略</span>
+                            <span class="game-tag">占领</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 精选区 -->
+            <section class="card featured-area">
+                <div class="card-header">
+                    <i class="fas fa-star"></i>
+                    <h2>精选区</h2>
+                </div>
+                <div class="featured-placeholder">
+                    <i class="fas fa-plus-circle"></i>
+                    <p>精选内容待添加</p>
+                </div>
+            </section>
+
+            <!-- 发现区 -->
+            <section class="card discovery-area">
+                <div class="card-header">
+                    <i class="fas fa-compass"></i>
+                    <h2>发现区</h2>
+                </div>
+                <div class="discovery-placeholder">
+                    <i class="fas fa-plus-circle"></i>
+                    <p>发现内容待添加</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2023 RE游戏中心 | 所有游戏均可直接在线游玩 | 点击游戏卡片跳转到游戏网站</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">开发者QQ: 2359211086 | 点击QQ号可直接联系开发者</p>
+        </footer>
+    </div>
+
+    <script>
+        // ER代码验证逻辑 - 隐藏验证代码
+        const erCodeModal = document.getElementById('erCodeModal');
+        const erInput = document.getElementById('erInput');
+        const erSubmitBtn = document.getElementById('erSubmitBtn');
+        const erError = document.getElementById('erError');
+        const mainContent = document.getElementById('mainContent');
+        
+        // 验证代码 - 不显示在前端
+        const validErCodes = ["369852.741", "369852.147"];
+        
+        // 获取随机验证代码
+        function getRandomErCode() {
+            const randomIndex = Math.floor(Math.random() * validErCodes.length);
+            return validErCodes[randomIndex];
+        }
+        
+        // 当前会话的验证代码
+        let currentValidCode = getRandomErCode();
+        
+        // ER代码验证函数
+        function verifyErCode() {
+            const inputCode = erInput.value.trim();
+            
+            if (validErCodes.includes(inputCode)) {
+                // 验证成功
+                erError.style.display = 'none';
+                
+                // 隐藏ER代码界面，显示主内容
+                erCodeModal.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // 保存验证状态到sessionStorage
+                sessionStorage.setItem('erCodeVerified', 'true');
+            } else {
+                // 验证失败
+                erError.style.display = 'block';
+                erInput.value = '';
+                erInput.focus();
+                
+                // 震动输入框
+                erInput.style.animation = 'none';
+                setTimeout(() => {
+                    erInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        }
+        
+        // 添加震动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% {transform: translateX(0);}
+                10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+                20%, 40%, 60%, 80% {transform: translateX(5px);}
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 检查是否已经验证过
+        function checkVerification() {
+            const verified = sessionStorage.getItem('erCodeVerified');
+            
+            if (verified === 'true') {
+                // 如果已经验证过，显示主内容
+                erCodeModal.style.display = 'none';
+                mainContent.style.display = 'block';
+            } else {
+                // 否则显示ER代码验证界面
+                erCodeModal.style.display = 'flex';
+                mainContent.style.display = 'none';
+            }
+        }
+        
+        // 页面加载时检查验证状态
+        window.addEventListener('load', checkVerification);
+        
+        // 提交按钮点击事件
+        erSubmitBtn.addEventListener('click', verifyErCode);
+        
+        // 输入框回车事件
+        erInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyErCode();
+            }
+        });
+        
+        // 暗色模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.className = 'fas fa-sun';
+                themeToggle.setAttribute('title', '切换到亮色模式');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                themeToggle.setAttribute('title', '切换到暗色模式');
+            }
+        });
+
+        // 加载弹窗和游戏跳转逻辑
+        const loadingModal = document.getElementById('loadingModal');
+        let redirectUrl = '';
+        
+        // 为所有游戏卡片添加点击事件
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const name = this.getAttribute('data-name');
+                
+                // 检查是否是本地文件
+                if (url.endsWith('.html')) {
+                    // 直接跳转到本地HTML文件
+                    window.open(url, '_blank');
+                    return;
+                }
+                
+                // 设置跳转URL
+                redirectUrl = url;
+                
+                // 显示加载弹窗
+                showLoadingModal(name);
+                
+                // 2.5秒后跳转到目标网站
+                setTimeout(() => {
+                    window.open(redirectUrl, '_blank');
+                    // 隐藏加载弹窗
+                    hideLoadingModal();
+                }, 2500);
+            });
+        });
+        
+        function showLoadingModal(gameName) {
+            // 更新弹窗内容
+            const modalTitle = loadingModal.querySelector('h3');
+            modalTitle.textContent = `正在进入${gameName}...`;
+            
+            // 显示弹窗
+            loadingModal.style.display = 'flex';
+        }
+        
+        function hideLoadingModal() {
+            loadingModal.style.display = 'none';
+        }
+        
+        // 为所有可点击卡片添加点击效果
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            card.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // QQ头像加载失败处理 - 使用多个备用源
+        const qqAvatar = document.getElementById('qqAvatar');
+        const avatarSources = [
+            'https://q1.qlogo.cn/g?b=qq&nk=2359211086&s=640',
+            'https://q.qlogo.cn/g?b=qq&nk=2359211086&s=640',
+            'https://thirdqq.qlogo.cn/g?b=qq&nk=2359211086&s=640'
+        ];
+        
+        let currentAvatarIndex = 0;
+        
+        qqAvatar.addEventListener('error', function() {
+            // 如果QQ头像加载失败，尝试下一个源
+            currentAvatarIndex++;
+            if (currentAvatarIndex < avatarSources.length) {
+                this.src = avatarSources[currentAvatarIndex];
+            } else {
+                // 所有源都失败，使用备用头像
+                this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23333"/><text x="50" y="60" font-size="40" text-anchor="middle" fill="white">RE</text></svg>';
+            }
+        });
+
+        // 页面加载完成
+        window.addEventListener('load', () => {
+            console.log('RE游戏中心已加载完成！');
+            console.log('开发者QQ: 2359211086');
+            // 不输出验证代码到控制台
+        });
+    </script>
 </body>
-
 </html>
